@@ -1,0 +1,64 @@
+<?xml version="1.0" ?>
+<project name="try" width=900 height=1100 >
+	<assets>
+		<scenes>
+			<scene name="MainScene" param="SWAP_YZ">
+				<file name="models\Teapot.3ds"/>
+			</scene>
+		</scenes>
+		<viewports>
+			<viewport name="dummy" >
+				<ORIGIN x=0.0 y=0.0 />
+				<SIZE width=100 height=100 />
+				<CLEAR_COLOR  r="0.2" g="0.2" b="0.4" />
+			</viewport>
+			<viewport name="SmallViewport1" >
+				<ORIGIN x=0.0 y=0.0 />
+				<SIZE width=1 height=1 />
+				<CLEAR_COLOR  r="0.2" g="0.2" b="0.4" />
+			</viewport>
+		</viewports>
+		<cameras>
+			<camera name="MainCamera" >
+				<viewport name="dummy" />
+				<projection TYPE="PERSPECTIVE" FOV=60.0 NEAR=1 FAR="1000.0" />
+				<POSITION x="-73.7" y="102.55.0" z="-2.620" />
+				<VIEW x="0.606338" y="-0.66687" z="0.433173" />
+				<UP x="0.0" y="1.0" z="0.0" />
+			</camera>
+		</cameras>
+		<lights>
+			<light name="Sun" type="directional">
+				<POSITION x="-52" y="77.0" z="-27.0" />
+				<DIRECTION x="1" y="-1" z="1" />
+				<COLOR r="0.9" g="0.9" b="0.9" />
+			</light>
+		</lights>
+		<materialLibs>
+			<materialLib filename="SSAO.mlib"/>
+		</materialLibs>
+	</assets>
+	
+	<pipelines>
+		<pipeline name="ao" default="true" defaultCamera="MainCamera">
+			<pass class="default" name="pass1">
+				<scenes>
+					<scene name="MainScene" />
+				</scenes>
+				<camera name="MainCamera" />
+				<renderTarget name="info" fromLibrary="Ambient Occlusion"/>	
+				<materialMaps>
+					<map fromMaterial="*" toLibrary="Ambient Occlusion" toMaterial="gatherInfo" />
+				</materialMaps>
+			</pass>
+			<pass class="quad" name="pass6">
+				<renderTarget name="shadows" fromLibrary="Ambient Occlusion"/>	
+				<material name="ambOcc" fromLibrary="Ambient Occlusion" />
+			</pass>
+			<pass class="quad" name="pass7">
+				<viewport name="SmallViewport1" />
+				<texture name="occMap" fromLibrary="Ambient Occlusion"/>	
+			</pass>
+		</pipeline>
+	</pipelines>
+</project>
